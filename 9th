@@ -1,0 +1,47 @@
+# Load necessary libraries
+library(ggplot2) # For plotting
+library(dplyr) # For data manipulation
+library(reshape2) # For reshaping data for heatmaps
+library(corrplot) # For correlation plot
+# Load the mtcars dataset
+data(mtcars)
+# 1. Correlation
+correlation_matrix<- cor(mtcars)
+print("Correlation Matrix:")
+print(correlation_matrix)
+# 2. Rank Correlation (Spearman)
+rank_correlation_matrix<- cor(mtcars, method = "spearman")
+print("Rank Correlation Matrix (Spearman):")
+print(rank_correlation_matrix)
+# 3. Linear Regression Example
+# Let's predict mpg based on wt and hp
+model<- lm(mpg ~ wt + hp, data = mtcars)
+summary(model)
+# Predictions and residuals
+mtcars$predicted_mpg<- predict(model)
+mtcars$residuals<- residuals(model)
+# 4. Plotting x-y plot
+# Scatter plot of actual vs predicted mpg
+ggplot(mtcars, aes(x = predicted_mpg, y = mpg)) +
+geom_point(color = 'blue') +
+geom_smooth(method = 'lm', color = 'red') +
+labs(title = "Actual vs Predicted MPG",
+ x = "Predicted MPG",
+ y = "Actual MPG") +
+theme_minimal()
+# 5. Heatmap of Correlation Matrix
+# Reshape the correlation matrix
+cor_melted<- melt(correlation_matrix)
+# Create the heatmap
+ggplot(cor_melted, aes(Var1, Var2, fill = value)) +
+geom_tile() +
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+midpoint = 0, limit = c(-1, 1), space = "Lab",
+name="Correlation") +
+theme_minimal() +
+labs(title = "Heatmap of Correlation Matrix") +
+theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+# 6. Correlation Plot
+corrplot(correlation_matrix, method = "circle", type = "upper",
+order = "hclust", tl.col = "black", tl.srt = 45,
+title = "Correlation Plot")
