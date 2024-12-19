@@ -1,0 +1,30 @@
+# Set seed for reproducibility
+set.seed(123)
+
+# One-sample data
+one_sample_data<- rnorm(30, mean = 50, sd = 10)
+# Two-sample data
+
+
+two_sample_data1 <- rnorm(30, mean = 55, sd = 10)
+two_sample_data2 <- rnorm(30, mean = 50, sd = 10)
+# Paired sample data
+
+
+paired_data_before<- rnorm(30, mean = 60, sd = 10)
+paired_data_after<- paired_data_before + rnorm(30, mean = -2, sd = 5)
+# One-sample t-test
+
+
+one_sample_test<- t.test(one_sample_data, mu = 50)
+print(one_sample_test)
+
+
+
+two_sample_test<- t.test(two_sample_data1, two_sample_data2)
+print(two_sample_test)
+# Paired t-test
+
+
+paired_test<- t.test(paired_data_before, paired_data_after, paired = TRUE)
+print(paired_test)
