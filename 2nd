@@ -1,1 +1,11 @@
 
+# String Manipulation
+strings<- c("Data_Analysis", "Computational_Statistics")
+library(stringr)
+# Replace underscores with spaces
+strings<- str_replace_all(strings, "_", " ")
+print(strings)
+# Regular Expressions
+emails<- c("user1@example.com", "user2@gmail.com")
+valid_emails<- grep("@example.com", emails, value = TRUE)
+print(valid_emails)
