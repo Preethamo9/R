@@ -1,0 +1,37 @@
+library(dplyr)
+# One-Way ANOVA
+
+
+set.seed(123) # For reproducibility
+treatment_A<- c(23, 25, 20, 22, 26)
+treatment_B<- c(30, 29, 31, 32, 28)
+treatment_C<- c(35, 36, 34, 33, 37)
+
+
+data_one_way<- data.frame(
+  value = c(treatment_A, treatment_B, treatment_C),
+  treatment = factor(rep(c("A", "B", "C"), each = 5))
+)
+one_way_anova<- aov(value ~ treatment, data = data_one_way)
+print(summary(one_way_anova))
+
+
+# Two-Way ANOVA
+treatment_A_male<- c(23, 25, 20, 22, 26)
+treatment_A_female<- c(30, 28, 31, 29, 32)
+treatment_B_male<- c(27, 29, 30, 26, 25)
+treatment_B_female<- c(35, 36, 34, 33, 37)
+
+
+
+data_two_way<- data.frame(
+  value = c(treatment_A_male, treatment_A_female, treatment_B_male,
+            treatment_B_female),
+  treatment = factor(rep(c("A", "B"), each = 10)),
+  gender = factor(rep(c("Male", "Female"), times = 10))
+)
+
+
+
+two_way_anova<- aov(value ~ treatment * gender, data = data_two_way)
+print(summary(two_way_anova))
