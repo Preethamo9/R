@@ -1,0 +1,43 @@
+library(dplyr)
+library(lubridate)
+library(forecast)
+# Sample data creation
+set.seed(123)
+date_seq <- seq(from = as.Date("2020-01-01"), by = "month", length.out = 36)
+data <- data.frame(
+Date = date_seq,
+Value1 = rnorm(36, mean = 200, sd = 20),
+Value2 = rnorm(36, mean = 100, sd = 10)
+)
+# Display the original data
+print("Original Data:")
+print(data)
+# Convert to time series
+data_ts <- ts(data[,-1], frequency = 12, start = c(2020, 1))
+# Grouping by year and calculating mean for each variable
+grouped_data <- data %>%
+mutate(Year = year(Date)) %>%
+group_by(Year) %>%
+summarise(Mean_Value1 = mean(Value1),
+Mean_Value2 = mean(Value2))
+# Display grouped data
+print("Grouped Data:")
+print(grouped_data)
+# Multivariate time series handling
+# This creates a time series object for both Value1 and Value2
+multivariate_ts <- ts(data[, -1], start = c(2020, 1), frequency = 12)
+# Forecasting with ARIMA for Value1
+fit_value1 <- auto.arima(multivariate_ts[, 1])
+forecast_value1 <- forecast(fit_value1, h = 6) # Forecasting for next 6 months
+# Forecasting with ARIMA for Value2
+fit_value2 <- auto.arima(multivariate_ts[, 2])
+forecast_value2 <- forecast(fit_value2, h =6) # Forecasting for next 6 months
+# Plot the forecasts
+par(mfrow = c(2, 1)) # Arrange plots vertically
+plot(forecast_value1, main = "Forecast for Value1", xlab = "Time", ylab = "Value1")
+plot(forecast_value2, main = "Forecast for Value2", xlab = "Time", ylab = "Value2")
+# Reset plot layout
+par(mfrow = c(1,2))
+print(forecast_value1)
+print(forecast_value2)
+checkresiduals(fit_value1)
