@@ -1,0 +1,13 @@
+# Combining and Merging datasets
+df1 <- data.frame(ID = 1:5, Name = c("A", "B", "C", "D", "E"))
+df2 <- data.frame(ID = 3:7, Age = c(25, 28, 22, 30, 26))
+# Merging on ID
+merged_df<- merge(df1, df2, by = "ID", all = TRUE)
+print(merged_df)
+# Reshaping data (pivoting)
+library(tidyr)
+long_df<- gather(merged_df, key = "Variable", value = "Value", -ID)
+print(long_df)
+# Pivoting back to wide format
+wide_df<- spread(long_df, key = "Variable", value = "Value")
+print(wide_df)
