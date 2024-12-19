@@ -1,0 +1,40 @@
+library(mlbench)
+library(ggplot2)
+library(dplyr)
+library(factoextra)
+
+
+
+
+data("BreastCancer", package = "mlbench")
+
+bc_data <- BreastCancer %>%
+  select(-Id) %>%
+  na.omit()
+
+
+
+bc_data$Class <- as.factor(bc_data$Class)
+
+
+numeric_data <- bc_data %>%
+  select(-Class) %>%
+  mutate(across(everything(), as.numeric))
+
+
+scaled_data <- scale(numeric_data)
+
+
+pca_result <- prcomp(scaled_data, center = TRUE, scale. = TRUE)
+
+fviz_screeplot(pca_result, addlabels = TRUE, ylim = c(0, 50))
+
+fviz_pca_biplot(pca_result,
+                geom.ind = "point",
+                pointshape = 21,
+                pointsize = 2,
+                fill.ind = as.factor(bc_data$Class),
+                palette = c("#FC3", "#F4C"),
+                addEllipses = TRUE,
+                legend.title = "Class")
+summary(pca_result)
