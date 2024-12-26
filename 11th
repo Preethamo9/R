@@ -1,0 +1,30 @@
+library(MASS) # For LDA
+library(ggplot2) # For visualization
+# Load the iris dataset
+data(iris)
+
+
+# Train the LDA model
+lda_model <- lda(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data
+                 = iris)
+
+
+# Print the model summary
+print(lda_model)
+
+
+# Predict the class labels using the LDA model
+lda_predictions <- predict(lda_model, iris)
+
+
+# Add the predicted values to the original dataset
+iris$lda_pred <- lda_predictions$class
+
+
+# Visualize the results using ggplot2
+# Plot the first two components of the LDA (LD1 and LD2)
+lda_df <- data.frame(LD1 = lda_predictions$x[, 1], LD2 = lda_predictions$x[, 2], Species
+                     = iris$Species)
+ggplot(lda_df, aes(x = LD1, y = LD2, color = Species)) +
+  geom_point(size = 3) +
+  labs( x = "LD1", y = "LD2")+theme_minimal()
